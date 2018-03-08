@@ -1,3 +1,6 @@
+# Recurses a directory and calls the block on each item depending on mode
+# mode can be :all, :dir, or :file
+# :dir ignores files, :file ignores directories
 def recurse(mode : Symbol, dir : String, &block : String ->) : Nil
   Dir.glob(dir_to_glob :recurse, dir, nil) do |file|
     if ignore_item?(mode, file)
@@ -8,40 +11,50 @@ def recurse(mode : Symbol, dir : String, &block : String ->) : Nil
   end
 end
 
+# Recurses a directory and calls the block on each file if it matches an extension in provided array
 def recurse_files(dir : String, ext : Array(String), &block : String ->) : Nil
   Dir.glob(dir_to_glob :recurse, dir, ext) do |file|
     block.call(file)
   end
 end
 
+# Calls block on each file in directory that matches an extension in provided list
 def get_files(dir : String, ext : Array(String), &block : String ->) : Nil
   Dir.glob(dir_to_glob :get, dir, ext) do |file|
     block.call(file)
   end
 end
 
+# Calls block on each file in directory
 def get_files(dir : String, &block : String ->) : Nil
   Dir.glob(dir_to_glob :get, dir, nil) do |file|
     block.call(file)
   end
 end
 
+# Build binary with name bin using src
 def release_build(src : String, bin : String) : Nil
   system "crystal build --release --no-debug -o #{bin} #{src}"
 end
 
+# Run binary with input string and output to log file
 def run_binary(bin : String, input : String, log : String) : Nil
   system "./#{bin} #{input} >> #{log}"
 end
 
+# Ensure bin directory exists in current directory.
+# If bin already exists, no error is raised.
 def ensure_bin_dir : Nil
   system "mkdir -p bin"
 end
 
+# Delete all items from bin/ USE WITH CAUTION
 def clear_bin_dir : Nil
   system "rm -f bin/*"
 end
 
+# Get the base name of a crystal file for use as binary name
+# Ex. /path/to/file.cr => file
 def binary_name(file : String) : String
   return File.basename file, ".cr"
 end
