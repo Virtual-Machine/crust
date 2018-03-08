@@ -30,7 +30,7 @@ def release_build(src : String, bin : String) : Nil
   system "crystal build --release --no-debug -o #{bin} #{src}"
 end
 
-def run_binary(bin : String, input : String, log : String)
+def run_binary(bin : String, input : String, log : String) : Nil
   system "./#{bin} #{input} >> #{log}"
 end
 
