@@ -65,6 +65,9 @@ end
 
 private def extensions_to_glob_list(ext : Array(String) | Nil) : String
   if ext
+    ext.each_with_index do |e, i|
+      ext[i] = e[0] == '.' ? e[1..-1] : e
+    end
     return ".{#{ext.join(',')}}"
   else
     return ""
