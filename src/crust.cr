@@ -40,13 +40,10 @@ end
 # Run binary with input string and output to log file
 def run_binary(bin : String, input : String, log : String) : Nil
   output = IO::Memory.new
-  Process.run(bin, args: {"postgres://localhost:5432/test?prepared_statements=false&initial_pool_size=1&max_pool_size=1&max_idle_pool_size=1"}, output: output)
+  Process.run(bin, args: {input}, output: output)
   output.close
   File.open(log, "a") do |f|
-    f << bin
-    f << '\n'
     f << output
-    f << '\n'
   end
 end
 
@@ -56,10 +53,7 @@ def run_script(interpreter : String, file : String, log : String) : Nil
   Process.run(interpreter, args: {file}, output: output)
   output.close
   File.open(log, "a") do |f|
-    f << file
-    f << '\n'
     f << output
-    f << '\n'
   end
 end
 
