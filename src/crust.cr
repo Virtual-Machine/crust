@@ -39,7 +39,15 @@ end
 
 # Run binary with input string and output to log file
 def run_binary(bin : String, input : String, log : String) : Nil
-  system "./#{bin} #{input} >> #{log}"
+  output = IO::Memory.new
+  Process.run(file, args: {"postgres://localhost:5432/test?prepared_statements=false&initial_pool_size=1&max_pool_size=1&max_idle_pool_size=1"}, output: output)
+  output.close
+  File.open(log, 'a') do |f|
+    f << file
+    f << '\n'
+    f << output
+    f << '\n'
+  end
 end
 
 # Ensure bin directory exists in current directory.
