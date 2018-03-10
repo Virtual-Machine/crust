@@ -43,7 +43,7 @@ def run_binary(bin : String, input : String, log : String) : Nil
   Process.run(bin, args: {"postgres://localhost:5432/test?prepared_statements=false&initial_pool_size=1&max_pool_size=1&max_idle_pool_size=1"}, output: output)
   output.close
   File.open(log, "a") do |f|
-    f << file
+    f << bin
     f << '\n'
     f << output
     f << '\n'
