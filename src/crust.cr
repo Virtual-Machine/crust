@@ -50,6 +50,19 @@ def run_binary(bin : String, input : String, log : String) : Nil
   end
 end
 
+# Run script using interpreter and output to log file
+def run_script(interpreter : String, file : String, log : String) : Nil
+  output = IO::Memory.new
+  Process.run(interpreter, args: {file}, output: output)
+  output.close
+  File.open(log, "a") do |f|
+    f << file
+    f << '\n'
+    f << output
+    f << '\n'
+  end
+end
+
 # Ensure bin directory exists in current directory.
 # If bin already exists, no error is raised.
 def ensure_bin_dir : Nil
