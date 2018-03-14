@@ -33,8 +33,17 @@ def get_files(dir : String, &block : String ->) : Nil
 end
 
 # Build binary with name bin using src
-def release_build(src : String, bin : String) : Nil
-  system "crystal build --release --no-debug -o #{bin} #{src}"
+def release_build(src : String, bin : String, opt : String = "") : Nil
+  case File.extname src
+  when ".cr"
+    system "crystal build --release --no-debug #{opt} -o #{bin} #{src}"
+  when ".go"
+    system "go build #{opt} -ldflags=\"-s -w\" -o #{bin} #{src}"
+  when ".rb"
+    system "cp #{src} #{bin}"
+  else
+    puts "Unknown release build source extension"
+  end
 end
 
 # Run binary with input string and output to log file
